@@ -10,26 +10,6 @@ import org.jgrapht.graph.SimpleGraph;
 
 public class KesselmanKogan implements Algorithm {
 
-	private class Matching {
-
-		List<Edge> edges;
-
-		Matching(Edge newEdge) {
-			edges = new ArrayList<>();
-			edges.add(newEdge);
-		}
-
-		boolean addEdge(Edge edge) {
-			return edges.add(edge);
-		}
-
-		boolean checkIfFits(Graph<Vertex, Edge> graph, Edge newEdge) {
-			return edges.stream()
-					.map(edge -> edge.getVerticies(graph))
-					.noneMatch(vertices -> vertices.contains(graph.getEdgeSource(newEdge)) || vertices.contains(graph.getEdgeTarget(newEdge)));
-		}
-	}
-
 	@Override
 	public Graph<Vertex, Edge> colorGraph(Graph<Vertex, Edge> graph) {
 		Set<Edge> edges = graph.edgeSet();
@@ -43,7 +23,8 @@ public class KesselmanKogan implements Algorithm {
 						.stream()
 						.filter(matching -> matching.checkIfFits(graph, currentEdge))
 						.findFirst();
-				availableMatching.map(matching -> matching.addEdge(currentEdge))
+				availableMatching
+						.map(matching -> matching.addEdge(currentEdge))
 						.orElseGet(() -> matchings.add(new Matching(currentEdge)));
 			}
 		});
