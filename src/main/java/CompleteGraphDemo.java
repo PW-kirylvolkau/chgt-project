@@ -11,20 +11,21 @@ public class CompleteGraphDemo {
 	private static final int SIZE = 8;
 
 	public static void main(String[] args) {
-//		Graph<Vertex, Edge> graph = new SimpleGraph<>(VertexSupplier.createDefaultVertexSupplier(), EdgeSupplier.createDefaultEdgeSupplier(), false);
-//		GnpRandomGraphGenerator<Vertex, Edge> completeGraphGenerator = new GnpRandomGraphGenerator<>(SIZE, 0.4);
-//		completeGraphGenerator.generateGraph(graph);
+		Graph<Vertex, Edge> graph = new SimpleGraph<>(VertexSupplier.createDefaultVertexSupplier(), EdgeSupplier.createDefaultEdgeSupplier(), false);
+		GnpRandomGraphGenerator<Vertex, Edge> completeGraphGenerator = new GnpRandomGraphGenerator<>(SIZE, 0.4);
+		completeGraphGenerator.generateGraph(graph);
+
+		KesselmanKogan kkAlgorithm = new KesselmanKogan();
+		kkAlgorithm.colorGraph(graph);
+		GraphExporter.export(graph);
+
+//		var initialTree = new SimpleGraph<>(VertexSupplier.createDefaultVertexSupplier(), EdgeSupplier.createDefaultEdgeSupplier(), false);
+//		PruferTreeGenerator<Vertex, Edge> tree = new PruferTreeGenerator<>(SIZE);
+//		tree.generateGraph(initialTree);
 //
-//		KesselmanKogan kkAlgorithm = new KesselmanKogan();
-//		kkAlgorithm.colorGraph(graph);
-
-		var initialTree = new SimpleGraph<>(VertexSupplier.createDefaultVertexSupplier(), EdgeSupplier.createDefaultEdgeSupplier(), false);
-		PruferTreeGenerator<Vertex, Edge> tree = new PruferTreeGenerator<>(SIZE);
-		tree.generateGraph(initialTree);
-
-		// TREES ALGORITHM
-		var treeAlgorithm = new TreesAlgorithm();
-		var coloredTree = treeAlgorithm.colorGraph(initialTree);
-		GraphExporter.export(coloredTree);
+//		// TREES ALGORITHM
+//		var treeAlgorithm = new TreesAlgorithm();
+//		var coloredTree = treeAlgorithm.colorGraph(initialTree);
+//		GraphExporter.export(coloredTree);
 	}
 }

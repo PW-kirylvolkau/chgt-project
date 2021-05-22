@@ -18,7 +18,7 @@ public class KesselmanKogan implements Algorithm {
 		edges.forEach(currentEdge -> {
 			if (matchings.isEmpty()) {
 				matchings.add(new Matching(currentEdge));
-			} else {
+			} else if (matchings.stream().noneMatch(matching -> matching.edges.contains(currentEdge))) {
 				Optional<Matching> availableMatching = matchings
 						.stream()
 						.filter(matching -> matching.checkIfFits(graph, currentEdge))
@@ -29,7 +29,7 @@ public class KesselmanKogan implements Algorithm {
 			}
 		});
 
-		System.out.println("Chromatic Index : " + (matchings.size() - noOfRepeats(matchings)));
+		System.out.println("Chromatic Index : " + matchings.size());
 		return buildNewGraph(graph, matchings);
 	}
 
@@ -50,15 +50,5 @@ public class KesselmanKogan implements Algorithm {
 			});
 		});
 		return newGraph;
-	}
-
-	private int noOfRepeats(List<Matching> matchings) {
-		List<Edge> allEdges = matchings
-				.stream()
-				.map(matching -> matching.edges)
-				.flatMap(Collection::stream)
-				.collect(Collectors.toList());
-		Set<Edge> edgesInSet = new HashSet<>(allEdges);
-		return allEdges.size() - edgesInSet.size();
 	}
 }
