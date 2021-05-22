@@ -2,6 +2,6 @@ import org.jgrapht.Graph;
 
 public interface Algorithm {
 
-	int colorGraph(Graph<Vertex, Edge> graph);
+	Graph<Vertex, Edge> colorGraph(Graph<Vertex, Edge> graph);
 
 }
