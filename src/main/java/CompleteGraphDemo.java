@@ -1,13 +1,20 @@
+import java.awt.Color;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Supplier;
 import org.jgrapht.Graph;
 import org.jgrapht.alg.connectivity.KosarajuStrongConnectivityInspector;
 import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
 import org.jgrapht.alg.interfaces.ShortestPathAlgorithm.SingleSourcePaths;
 import org.jgrapht.alg.interfaces.StrongConnectivityAlgorithm;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
+import org.jgrapht.generate.RandomRegularGraphGenerator;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
-
+import org.jgrapht.graph.SimpleGraph;
+import org.jgrapht.traverse.DepthFirstIterator;
+import org.jgrapht.util.SupplierUtil;
 
 public final class CompleteGraphDemo {
 
@@ -15,54 +22,27 @@ public final class CompleteGraphDemo {
 	private static final int SIZE = 10;
 
 	public static void main(String[] args) {
-		// constructs a directed graph with the specified vertices and edges
-		Graph<String, DefaultEdge> directedGraph = new DefaultDirectedGraph<>(DefaultEdge.class);
-		directedGraph.addVertex("a");
-		directedGraph.addVertex("b");
-		directedGraph.addVertex("c");
-		directedGraph.addVertex("d");
-		directedGraph.addVertex("e");
-		directedGraph.addVertex("f");
-		directedGraph.addVertex("g");
-		directedGraph.addVertex("h");
-		directedGraph.addVertex("i");
-		directedGraph.addEdge("a", "b");
-		directedGraph.addEdge("b", "d");
-		directedGraph.addEdge("d", "c");
-		directedGraph.addEdge("c", "a");
-		directedGraph.addEdge("e", "d");
-		directedGraph.addEdge("e", "f");
-		directedGraph.addEdge("f", "g");
-		directedGraph.addEdge("g", "e");
-		directedGraph.addEdge("h", "e");
-		directedGraph.addEdge("i", "h");
+		Supplier<Vertex> vSupplier = new Supplier<>() {
+			private int id = 0;
 
-		// computes all the strongly connected components of the directed graph
-		StrongConnectivityAlgorithm<String, DefaultEdge> scAlg =
-				new KosarajuStrongConnectivityInspector<>(directedGraph);
-		List<Graph<String, DefaultEdge>> stronglyConnectedSubgraphs =
-				scAlg.getStronglyConnectedComponents();
+			@Override
+			public Vertex get() {
+				return new Vertex("v" + ++id, Color.BLACK);
+			}
+		};
 
-		// prints the strongly connected components
-		System.out.println("Strongly connected components:");
-		for (int i = 0; i < stronglyConnectedSubgraphs.size(); i++) {
-			System.out.println(stronglyConnectedSubgraphs.get(i));
+		Graph<Vertex, DefaultEdge> graph = new SimpleGraph<>(vSupplier, SupplierUtil.createDefaultEdgeSupplier(), false);
+		RandomRegularGraphGenerator<Vertex, DefaultEdge> regularGraphGenerator = new RandomRegularGraphGenerator<>(SIZE, 2);
+		regularGraphGenerator.generateGraph(graph);
+
+		Set<Vertex> strings = graph.vertexSet();
+		Vertex start = strings.stream().findAny().get();
+		start.color = Color.RED;
+
+		Iterator<Vertex> iterator = new DepthFirstIterator<>(graph, start);
+		while (iterator.hasNext()) {
+			Vertex uri = iterator.next();
+			System.out.println(uri.name + " " + uri.color);
 		}
-		System.out.println();
-
-		// Prints the shortest path from vertex i to vertex c. This certainly
-		// exists for our particular directed graph.
-		System.out.println("Shortest path from i to c:");
-		DijkstraShortestPath<String, DefaultEdge> dijkstraAlg =
-				new DijkstraShortestPath<>(directedGraph);
-		ShortestPathAlgorithm.SingleSourcePaths<String, DefaultEdge> iPaths = dijkstraAlg.getPaths("i");
-		System.out.println(iPaths.getPath("c") + "\n");
-
-		// Prints the shortest path from vertex c to vertex i. This path does
-		// NOT exist for our particular directed graph. Hence the path is
-		// empty and the result must be null.
-		System.out.println("Shortest path from c to i:");
-		SingleSourcePaths<String, DefaultEdge> cPaths = dijkstraAlg.getPaths("c");
-		System.out.println(cPaths.getPath("i"));
 	}
 }
