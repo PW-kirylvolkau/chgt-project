@@ -1,4 +1,3 @@
-import java.awt.Color;
 import java.util.function.Supplier;
 import org.jgrapht.Graph;
 import org.jgrapht.generate.CompleteGraphGenerator;
@@ -24,12 +23,7 @@ public class CompleteGraphDemo {
 		completeGraphGenerator.generateGraph(graph);
 
 		KesselmanKogan kkAlgorithm = new KesselmanKogan();
-		System.out.println("Chromatic index : " + kkAlgorithm.colorGraph(graph));
-
-//		System.out.println(graph.edgeSet());
-//
-//		graph.edgeSet().forEach(edge -> edge.color = ColorEnum.getRandomColor());
-//		System.out.println(graph.edgeSet());
+		kkAlgorithm.colorGraph(graph);
 
 		GraphExporter.export(graph);
 	}

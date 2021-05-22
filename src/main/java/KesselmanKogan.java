@@ -29,7 +29,7 @@ public class KesselmanKogan implements Algorithm {
 	}
 
 	@Override
-	public int colorGraph(Graph<Vertex, Edge> graph) {
+	public Graph<Vertex, Edge> colorGraph(Graph<Vertex, Edge> graph) {
 		Set<Edge> edges = graph.edgeSet();
 		List<Matching> matchings = new ArrayList<>();
 
@@ -46,6 +46,11 @@ public class KesselmanKogan implements Algorithm {
 			}
 		});
 
+		System.out.println("Chromatic index : " + matchings.size());
+		return buildNewGraph(graph, matchings);
+	}
+
+	private Graph<Vertex, Edge> buildNewGraph(Graph<Vertex, Edge> graph, List<Matching> matchings) {
 		Graph<Vertex, Edge> newGraph = new SimpleGraph<>(Edge.class);
 		graph.vertexSet().forEach(newGraph::addVertex);
 		matchings.forEach(matching -> {
@@ -55,7 +60,6 @@ public class KesselmanKogan implements Algorithm {
 				newGraph.addEdge(graph.getEdgeSource(edge), graph.getEdgeTarget(edge), edge);
 			});
 		});
-
-		return matchings.size();
+		return newGraph;
 	}
 }
