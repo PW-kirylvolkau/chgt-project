@@ -26,17 +26,23 @@ public class KesselmanKogan implements Algorithm {
 			}
 		});
 
-		System.out.println("Chromatic index : " + matchings.size());
+		System.out.println("Chromatic Index : " + matchings.size());
 		return buildNewGraph(graph, matchings);
 	}
 
 	private Graph<Vertex, Edge> buildNewGraph(Graph<Vertex, Edge> graph, List<Matching> matchings) {
 		Graph<Vertex, Edge> newGraph = new SimpleGraph<>(Edge.class);
 		graph.vertexSet().forEach(newGraph::addVertex);
+		List<ColorEnum> usedColors = new ArrayList<>();
 		matchings.forEach(matching -> {
-			ColorEnum colorEnum = ColorEnum.getRandomColor();
+			ColorEnum selectedColor = ColorEnum.getRandomColor();
+			while (usedColors.contains(selectedColor)) {
+				selectedColor = ColorEnum.getRandomColor();
+			}
+			usedColors.add(selectedColor);
+			ColorEnum finalSelectedColor = selectedColor;
 			matching.edges.forEach(edge -> {
-				edge.color = colorEnum;
+				edge.color = finalSelectedColor;
 				newGraph.addEdge(graph.getEdgeSource(edge), graph.getEdgeTarget(edge), edge);
 			});
 		});
