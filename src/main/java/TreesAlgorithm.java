@@ -1,8 +1,12 @@
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+import java.util.Set;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.SimpleGraph;
 import org.jgrapht.traverse.DepthFirstIterator;
-
-import java.util.*;
 
 public class TreesAlgorithm implements Algorithm {
 
@@ -13,25 +17,21 @@ public class TreesAlgorithm implements Algorithm {
         Set<Vertex> vertices = new HashSet<>(graph.vertexSet());
         List<Matching> matchings = new ArrayList<>();
 
-
         int startIdx = new Random().nextInt(vertices.size());
         Vertex startVertex = (Vertex)vertices.toArray()[startIdx];
-        System.out.println("initial vertex : " + startVertex.name);
 
-        var iterator = new DepthFirstIterator<Vertex, Edge>(graph, startVertex);
+        var iterator = new DepthFirstIterator<>(graph, startVertex);
         while (iterator.hasNext()){
             var current = iterator.next();
             var edges = graph.edgesOf(current);
             for (Edge currentEdge: edges) {
                 if (matchings.isEmpty()) {
                     matchings.add(new Matching(currentEdge));
-                } else {
+                } else if (matchings.stream().noneMatch(matching -> matching.edges.contains(currentEdge))) {
                     Optional<Matching> availableMatching = matchings
                             .stream()
-                            .filter(matching -> matching.checkIfFits(graph, currentEdge))
+                            .filter(matching -> matching.edges.stream().noneMatch(edges::contains))
                             .findFirst();
-
-
                     availableMatching
                             .map(matching -> matching.addEdge(currentEdge))
                             .orElseGet(() -> matchings.add(new Matching(currentEdge)));

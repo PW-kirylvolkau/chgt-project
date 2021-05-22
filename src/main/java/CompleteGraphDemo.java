@@ -8,7 +8,7 @@ import org.jgrapht.traverse.DepthFirstIterator;
 
 public class CompleteGraphDemo {
 
-	private static final int SIZE = 10;
+	private static final int SIZE = 8;
 
 	public static void main(String[] args) {
 //		Graph<Vertex, Edge> graph = new SimpleGraph<>(VertexSupplier.createDefaultVertexSupplier(), EdgeSupplier.createDefaultEdgeSupplier(), false);
