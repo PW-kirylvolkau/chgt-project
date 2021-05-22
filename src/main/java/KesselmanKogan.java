@@ -1,7 +1,10 @@
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.SimpleGraph;
 
@@ -45,7 +48,7 @@ public class KesselmanKogan implements Algorithm {
 			}
 		});
 
-		System.out.println("Chromatic Index : " + matchings.size());
+		System.out.println("Chromatic Index : " + (matchings.size() - noOfRepeats(matchings)));
 		return buildNewGraph(graph, matchings);
 	}
 
@@ -66,5 +69,15 @@ public class KesselmanKogan implements Algorithm {
 			});
 		});
 		return newGraph;
+	}
+
+	private int noOfRepeats(List<Matching> matchings) {
+		List<Edge> allEdges = matchings
+				.stream()
+				.map(matching -> matching.edges)
+				.flatMap(Collection::stream)
+				.collect(Collectors.toList());
+		Set<Edge> edgesInSet = new HashSet<>(allEdges);
+		return allEdges.size() - edgesInSet.size();
 	}
 }
