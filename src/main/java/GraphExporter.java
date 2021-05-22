@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import org.jgrapht.Graph;
 import org.jgrapht.nio.dot.DOTExporter;
 
@@ -10,10 +11,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GraphExporter {
+
     private static int numberOfVertices;
 
     public static void export(Graph<Vertex, Edge> graph) {
-
         numberOfVertices =  graph.vertexSet().size();
 
         DOTExporter<Vertex, Edge> exporter = new DOTExporter<>(v -> v.name);
@@ -23,7 +24,7 @@ public class GraphExporter {
         exporter.exportGraph(graph, writer);
         String output = writer.toString();
 
-        String websiteAddress = createUrlFromOutput(output, graph.edgeSet().stream().collect(Collectors.toList()));
+        String websiteAddress = createUrlFromOutput(output, new ArrayList<>(graph.edgeSet()));
         openInBrowser(websiteAddress);
 
     }
@@ -50,39 +51,39 @@ public class GraphExporter {
         StringBuilder result = new StringBuilder();
         int i = 0;
         for (String l: lines) {
-            if(i > numberOfVertices || i == 0)
-                result.append(l);
-
+            if(i > numberOfVertices || i == 0) {
+				result.append(l);
+			}
             i++;
         }
         return result.toString();
     }
 
     // input must be of this form:
-    // strict graph G {  v3 -- v4;  v4 -- v8;  v2 -- v6;}
-    private static String createUrlFromOutput(String input, List<Edge> edges) {
-        String defaultString = "https://dreampuf.github.io/GraphvizOnline/#strict%20graph%20G%7B";
+	// strict graph G {  v3 -- v4;  v4 -- v8;  v2 -- v6;}
+	private static String createUrlFromOutput(String input, List<Edge> edges) {
+		String defaultString = "https://dreampuf.github.io/GraphvizOnline/#strict%20graph%20G%7B";
 
-        String output = deleteVerticesFromOutput(input);
-        output = output.substring(output.indexOf('{') + 3, output.indexOf('}')).replace(" ", "");
+		String output = deleteVerticesFromOutput(input);
+		output = output.substring(output.indexOf('{') + 3, output.indexOf('}')).replace(" ", "");
 
-        StringBuilder result = new StringBuilder();
-        result.append(defaultString);
-        int counterOfEdges = 0;
-        for (int i = 0; i < output.length(); i++) {
-            char c = output.charAt(i);
+		StringBuilder result = new StringBuilder();
+		result.append(defaultString);
+		int counterOfEdges = 0;
+		for (int i = 0; i < output.length(); i++) {
+			char c = output.charAt(i);
 
-            if(c == ';') {
-                result.append("%5Bcolor%3D");
-                result.append(edges.get(counterOfEdges).color.toString().toLowerCase());
-                result.append("%5D");
-                result.append("%3B");
-                counterOfEdges++;
-            }
-            else
-                result.append(c);
-        }
-        result.append("%7D");
-        return result.toString();
-    }
+			if (c == ';') {
+				result.append("%5Bcolor%3D");
+				result.append(edges.get(counterOfEdges).color.toString().toLowerCase());
+				result.append("%5D");
+				result.append("%3B");
+				counterOfEdges++;
+			} else {
+				result.append(c);
+			}
+		}
+		result.append("%7D");
+		return result.toString();
+	}
 }
