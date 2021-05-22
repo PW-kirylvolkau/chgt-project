@@ -1,16 +1,9 @@
 import java.awt.Color;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 import org.jgrapht.Graph;
-import org.jgrapht.alg.connectivity.KosarajuStrongConnectivityInspector;
-import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
-import org.jgrapht.alg.interfaces.ShortestPathAlgorithm.SingleSourcePaths;
-import org.jgrapht.alg.interfaces.StrongConnectivityAlgorithm;
-import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.generate.RandomRegularGraphGenerator;
-import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 import org.jgrapht.traverse.DepthFirstIterator;
