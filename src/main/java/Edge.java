@@ -1,5 +1,8 @@
 import java.awt.Color;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
 public class Edge extends DefaultEdge implements Serializable {
@@ -10,5 +13,12 @@ public class Edge extends DefaultEdge implements Serializable {
 
 	public Edge() {
 
+	}
+
+	public List<Vertex> getVerticies(Graph<Vertex, Edge> graph) {
+		List<Vertex> vertices = new ArrayList<>();
+		vertices.add(graph.getEdgeSource(this));
+		vertices.add(graph.getEdgeTarget(this));
+		return vertices;
 	}
 }

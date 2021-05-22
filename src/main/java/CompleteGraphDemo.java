@@ -26,6 +26,9 @@ public class CompleteGraphDemo {
 		RandomRegularGraphGenerator<Vertex, Edge> regularGraphGenerator = new RandomRegularGraphGenerator<>(SIZE, 2);
 		regularGraphGenerator.generateGraph(graph);
 
+		KesselmanKogan kkAlgorithm = new KesselmanKogan();
+		System.out.println(kkAlgorithm.colorGraph(graph));
+
 		Set<Vertex> strings = graph.vertexSet();
 		Vertex start = strings.stream().findAny().get();
 		start.color = Color.RED;
