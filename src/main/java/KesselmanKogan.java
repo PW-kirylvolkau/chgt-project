@@ -1,15 +1,20 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Supplier;
 import org.jgrapht.Graph;
+import org.jgrapht.graph.SimpleGraph;
 
 public class KesselmanKogan implements Algorithm {
 
 	private class Matching {
+
 		public List<Edge> edges;
 
 		public Matching(Edge newEdge) {
-			this.edges = new ArrayList<>(List.of(newEdge));
+			edges = new ArrayList<>();
+			edges.add(newEdge);
 		}
 
 		public boolean addEdge(Edge edge) {
@@ -25,11 +30,10 @@ public class KesselmanKogan implements Algorithm {
 
 	@Override
 	public int colorGraph(Graph<Vertex, Edge> graph) {
-		List<Edge> edges = new ArrayList<>(graph.edgeSet());
+		Set<Edge> edges = graph.edgeSet();
 		List<Matching> matchings = new ArrayList<>();
 
-		for (int i = 0; i < edges.size(); i++) {
-			Edge currentEdge = edges.get(i);
+		edges.forEach(currentEdge -> {
 			if (matchings.isEmpty()) {
 				matchings.add(new Matching(currentEdge));
 			} else {
@@ -39,8 +43,18 @@ public class KesselmanKogan implements Algorithm {
 						.findFirst();
 				availableMatching.map(matching -> matching.addEdge(currentEdge))
 						.orElseGet(() -> matchings.add(new Matching(currentEdge)));
-				}
 			}
+		});
+
+		Graph<Vertex, Edge> newGraph = new SimpleGraph<>(Edge.class);
+		graph.vertexSet().forEach(newGraph::addVertex);
+		matchings.forEach(matching -> {
+			ColorEnum colorEnum = ColorEnum.getRandomColor();
+			matching.edges.forEach(edge -> {
+				edge.color = colorEnum;
+				newGraph.addEdge(graph.getEdgeSource(edge), graph.getEdgeTarget(edge), edge);
+			});
+		});
 
 		return matchings.size();
 	}

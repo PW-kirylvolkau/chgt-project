@@ -1,4 +1,3 @@
-import java.awt.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +8,7 @@ public class Edge extends DefaultEdge implements Serializable {
 
 	private static final long serialVersionUID = 3252408452177932855L;
 
-	public Color color;
+	public ColorEnum color;
 
 	public Edge() {
 
@@ -20,5 +19,10 @@ public class Edge extends DefaultEdge implements Serializable {
 		vertices.add(graph.getEdgeSource(this));
 		vertices.add(graph.getEdgeTarget(this));
 		return vertices;
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + " " + color.name();
 	}
 }

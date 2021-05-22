@@ -67,10 +67,8 @@ public class GraphExporter {
         String output = deleteVerticesFromOutput(input);
         output = output.substring(output.indexOf('{') + 3, output.indexOf('}')).replace(" ", "");
 
-
         for (int i = 0; i < output.length(); i++) {
             char c = output.charAt(i);
-            System.out.println(c);
 
             if(c == ';')
                 defaultString += "%3B";
