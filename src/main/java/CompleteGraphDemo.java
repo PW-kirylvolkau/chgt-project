@@ -1,16 +1,13 @@
 import java.awt.Color;
-import java.util.Iterator;
-import java.util.Set;
 import java.util.function.Supplier;
 import org.jgrapht.Graph;
-import org.jgrapht.generate.RandomRegularGraphGenerator;
+import org.jgrapht.generate.CompleteGraphGenerator;
 import org.jgrapht.graph.SimpleGraph;
-import org.jgrapht.traverse.DepthFirstIterator;
 
 public class CompleteGraphDemo {
 
 	// number of vertices
-	private static final int SIZE = 10;
+	private static final int SIZE = 6;
 
 	public static void main(String[] args) {
 		Supplier<Vertex> vSupplier = new Supplier<>() {
@@ -18,22 +15,22 @@ public class CompleteGraphDemo {
 
 			@Override
 			public Vertex get() {
-				return new Vertex("v" + ++id, Color.BLACK);
+				return new Vertex("v" + ++id);
 			}
 		};
 
 		Graph<Vertex, Edge> graph = new SimpleGraph<>(vSupplier, EdgeSupplier.createDefaultEdgeSupplier(), false);
-		RandomRegularGraphGenerator<Vertex, Edge> regularGraphGenerator = new RandomRegularGraphGenerator<>(SIZE, 2);
-		regularGraphGenerator.generateGraph(graph);
+		CompleteGraphGenerator<Vertex, Edge> completeGraphGenerator = new CompleteGraphGenerator<>(SIZE);
+		completeGraphGenerator.generateGraph(graph);
 
-		Set<Vertex> strings = graph.vertexSet();
-		Vertex start = strings.stream().findAny().get();
-		start.color = Color.RED;
+		KesselmanKogan kkAlgorithm = new KesselmanKogan();
+		System.out.println("Chromatic index : " + kkAlgorithm.colorGraph(graph));
 
-		Iterator<Vertex> iterator = new DepthFirstIterator<>(graph, start);
-		while (iterator.hasNext()) {
-			Vertex uri = iterator.next();
-			System.out.println(uri.name + " " + uri.color);
-		}
+//		System.out.println(graph.edgeSet());
+//
+//		graph.edgeSet().forEach(edge -> edge.color = ColorEnum.getRandomColor());
+//		System.out.println(graph.edgeSet());
+
+		GraphExporter.export(graph);
 	}
 }
