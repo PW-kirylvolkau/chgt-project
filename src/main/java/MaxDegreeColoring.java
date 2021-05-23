@@ -12,7 +12,7 @@ public class MaxDegreeColoring implements Algorithm {
     @Override
     public Graph<Vertex, Edge> colorGraph(Graph<Vertex, Edge> graph) {
         int allowedNumberOfColors = findGraphDegree(graph);
-        ArrayList<ColorEnum> colors = new ArrayList<ColorEnum>();
+        ArrayList<ColorEnum> palette = new ArrayList<>();
         Graph<Vertex, Edge> newGraph = new SimpleGraph<>(Edge.class);
         graph.vertexSet().forEach(newGraph::addVertex);
         ColorEnum tempColor;
@@ -21,7 +21,7 @@ public class MaxDegreeColoring implements Algorithm {
 
         for (Vertex vertex : graph.vertexSet()) {
             ArrayList<Edge> edges = new ArrayList<>(graph.edgeSet());
-            String v0 = vertex.name.toLowerCase();
+
             // list of all the edges that have vertex as one of its ends
             List<Edge> collect = edges
                     .stream()
@@ -32,34 +32,47 @@ public class MaxDegreeColoring implements Algorithm {
                 String v1 = edge.getVerticies(graph).get(0).name;
                 String v2 = edge.getVerticies(graph).get(1).name;
                 ColorEnum color = customEdges.getColorOfEdge(v1, v2);
+
                 if(color != null) {
                     edge.color = color;
                     newGraph.addEdge(edge.getVerticies(graph).get(0), edge.getVerticies(graph).get(1), edge);
-                    colors.add(color);
+                    palette.add(color);
                     continue;
                 }
 
                 tempColor  = ColorEnum.getRandomColor();
-                ArrayList<ColorEnum> c;
-                if(v0 == v1)
-                    c = customEdges.getEdgeColorsConnectedToVertex(v2);
-                else
-                    c = customEdges.getEdgeColorsConnectedToVertex(v1);
 
-                while(colors.contains(tempColor) && !c.contains(tempColor)) {
-                    tempColor  = ColorEnum.getRandomColor();
+                if(palette.size() < allowedNumberOfColors) {
+                while(palette.contains(tempColor)) {
+                        tempColor  = ColorEnum.getRandomColor();
+                    }
+                } else {
+                   // ArrayList<ColorEnum> colorsNotToBeUsed = customEdges.getEdgeColorsConnectedToVertex(v0);
+
+                    ArrayList<ColorEnum> colorsNotToBeUsed = customEdges.getEdgeColorsConnectedToVertex(v1);
+                    colorsNotToBeUsed.addAll(customEdges.getEdgeColorsConnectedToVertex(v2));
+
+                    try {
+                        tempColor = palette.stream().filter(cEnum -> !colorsNotToBeUsed.contains(cEnum)).findAny().orElseThrow(IllegalStateException::new);
+                    } catch (IllegalStateException x) {
+                        x.printStackTrace();
+                    }
+
                 }
+
 
                 edge.color = tempColor;
                 customEdges.colorEdge(v1, v2, tempColor);
                 newGraph.addEdge(edge.getVerticies(graph).get(0), edge.getVerticies(graph).get(1), edge);
-
-                colors.add(tempColor);
+                if(!palette.contains(tempColor)) {
+                    palette.add(tempColor);
+                }
             }
-            colors.clear();
         }
 
         customEdges.print();
+        customEdges.printNumberOfColors();
+        System.out.println(allowedNumberOfColors + " is the allowed number of colors");
         return newGraph;
     }
 
@@ -85,10 +98,6 @@ public class MaxDegreeColoring implements Algorithm {
 
         }
 
-        public int countNumberOfColors() {
-            // TODO
-            return 0;
-        }
 
         private void addEdgeWithoutColor(Graph<Vertex, Edge> graph, Edge edge) {
             String v1 = edge.getVerticies(graph).get(0).name;
@@ -126,11 +135,11 @@ public class MaxDegreeColoring implements Algorithm {
         }
 
         public ArrayList<ColorEnum> getEdgeColorsConnectedToVertex(String v) {
-            ArrayList<ColorEnum> colorEnums = new ArrayList<ColorEnum>();
+            ArrayList<ColorEnum> colorEnums = new ArrayList<>();
             ArrayList<String> names = getAllTheNames();
             names.removeIf(x -> x.equals(v));
 
-            ColorEnum c = null;
+            ColorEnum c;
 
             for (String n: names) {
                 for (CustomEdge e: edges) {
@@ -166,11 +175,19 @@ public class MaxDegreeColoring implements Algorithm {
         }
 
         void printNumberOfColors() {
-            System.out.println("printNumberOfColors() to be implemented");
-        }
+            ArrayList<ColorEnum> colorEnums = new ArrayList<>();
 
-        public void printNumberOfEdges() {
-            System.out.println(this.edges.size());
+            ColorEnum c;
+
+            for (CustomEdge e : edges) {
+                c = e.color;
+                if (c != null) {
+                    if (!colorEnums.contains(c)) {
+                        colorEnums.add(c);
+                    }
+                }
+            }
+            System.out.println(colorEnums.size() + " is the number of colors used by MaxDegreeColoring");
         }
 
         public void print() {
@@ -188,12 +205,6 @@ public class MaxDegreeColoring implements Algorithm {
             this.v1 = v1;
             this.v2 = v2;
             this.color = null;
-        }
-
-        public CustomEdge(String v1, String v2, ColorEnum color) {
-            this.v1 = v1;
-            this.v2 = v2;
-            this.color = color;
         }
 
         public ColorEnum getColor(String v1, String v2) {
@@ -229,10 +240,6 @@ public class MaxDegreeColoring implements Algorithm {
                 System.out.println(v1 + " " + v2 + " " + "null"  );
             else
                 System.out.println(v1 + " " + v2 + " " + color.toString().toLowerCase()  );
-        }
-
-        public boolean IsVertexIn(String v) {
-            return v.equals(v1) || v.equals(v2);
         }
     }
 }
