@@ -13,9 +13,11 @@ import java.util.stream.Collectors;
 public class GraphExporter {
 
     private static int numberOfVertices;
+    private static boolean showWeights;
 
-    public static void export(Graph<Vertex, Edge> graph) {
+    public static void export(Graph<Vertex, Edge> graph, boolean displayWeights) {
         numberOfVertices =  graph.vertexSet().size();
+        showWeights = displayWeights;
 
         DOTExporter<Vertex, Edge> exporter = new DOTExporter<>(v -> v.name);
         graph.vertexSet();
@@ -81,8 +83,10 @@ public class GraphExporter {
                     result.append(edges.get(counterOfEdges).color.toString().toLowerCase());
                 }
 
-                result.append("%2Clabel%3D");
-                result.append(String.valueOf(graph.getEdgeWeight(edges.get(counterOfEdges))));
+                if(showWeights == true) {
+                    result.append("%2Clabel%3D");
+                    result.append(String.valueOf(graph.getEdgeWeight(edges.get(counterOfEdges))));
+                }
 
 				result.append("%5D");
 				result.append("%3B");
