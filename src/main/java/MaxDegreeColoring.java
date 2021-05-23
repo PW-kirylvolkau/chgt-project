@@ -7,8 +7,6 @@ import java.util.stream.Collectors;
 
 public class MaxDegreeColoring implements Algorithm {
 
-    /* By Vizing's theorem, the number of colors needed to edge color
-     a simple graph is either its maximum degree Δ or Δ+1 */
     @Override
     public Graph<Vertex, Edge> colorGraph(Graph<Vertex, Edge> graph) {
         int allowedNumberOfColors = findGraphDegree(graph);
@@ -47,7 +45,6 @@ public class MaxDegreeColoring implements Algorithm {
                         tempColor  = ColorEnum.getRandomColor();
                     }
                 } else {
-                   // ArrayList<ColorEnum> colorsNotToBeUsed = customEdges.getEdgeColorsConnectedToVertex(v0);
 
                     ArrayList<ColorEnum> colorsNotToBeUsed = customEdges.getEdgeColorsConnectedToVertex(v1);
                     colorsNotToBeUsed.addAll(customEdges.getEdgeColorsConnectedToVertex(v2));
@@ -70,7 +67,6 @@ public class MaxDegreeColoring implements Algorithm {
             }
         }
 
-        customEdges.print();
         customEdges.printNumberOfColors();
         System.out.println(allowedNumberOfColors + " is the allowed number of colors");
         return newGraph;
@@ -139,11 +135,9 @@ public class MaxDegreeColoring implements Algorithm {
             ArrayList<String> names = getAllTheNames();
             names.removeIf(x -> x.equals(v));
 
-            ColorEnum c;
-
             for (String n: names) {
                 for (CustomEdge e: edges) {
-                    c = e.getColor(n, v);
+                    ColorEnum c = e.getColor(n, v);
                     if(c != null) {
                         if(!colorEnums.contains(c)) {
                             colorEnums.add(c);
@@ -159,8 +153,9 @@ public class MaxDegreeColoring implements Algorithm {
             ColorEnum color = null;
             for (CustomEdge e: this.edges) {
                 color = e.getColor(v1, v2);
-                if(color != null)
+                if(color != null) {
                     return color;
+                }
             }
 
             return color;
@@ -177,10 +172,8 @@ public class MaxDegreeColoring implements Algorithm {
         void printNumberOfColors() {
             ArrayList<ColorEnum> colorEnums = new ArrayList<>();
 
-            ColorEnum c;
-
             for (CustomEdge e : edges) {
-                c = e.color;
+                ColorEnum c = e.color;
                 if (c != null) {
                     if (!colorEnums.contains(c)) {
                         colorEnums.add(c);
@@ -188,12 +181,6 @@ public class MaxDegreeColoring implements Algorithm {
                 }
             }
             System.out.println(colorEnums.size() + " is the number of colors used by MaxDegreeColoring");
-        }
-
-        public void print() {
-            for (CustomEdge e: this.edges) {
-                e.print();
-            }
         }
     }
 
@@ -215,31 +202,15 @@ public class MaxDegreeColoring implements Algorithm {
             return null;
         }
 
-        public void colorEdge(ColorEnum color) {
-            if(this.color == null)
-                this.color = color;
-            else
-                System.out.println("This edge is already colored");
-        }
-
         public boolean equals(String v1, String v2) {
-            if(this.v1.equals(v1) && this.v2.equals(v2))
+            if(this.v1.equals(v1) && this.v2.equals(v2)) {
                 return true;
-            if(this.v1.equals(v2) && this.v2.equals(v1))
-                return true;
-
-            return false;
+            }
+            return this.v1.equals(v2) && this.v2.equals(v1);
         }
 
         public void setColor(ColorEnum c) {
             this.color = c;
-        }
-
-        public void print() {
-            if(color == null)
-                System.out.println(v1 + " " + v2 + " " + "null"  );
-            else
-                System.out.println(v1 + " " + v2 + " " + color.toString().toLowerCase()  );
         }
     }
 }

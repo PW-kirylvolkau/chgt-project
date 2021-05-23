@@ -8,7 +8,6 @@ import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class GraphExporter {
 
@@ -28,7 +27,6 @@ public class GraphExporter {
 
         String websiteAddress = createUrlFromOutput(output, new ArrayList<>(graph.edgeSet()), graph);
         openInBrowser(websiteAddress);
-
     }
 
     private static void openInBrowser(String websiteAddress) {
@@ -83,9 +81,9 @@ public class GraphExporter {
                     result.append(edges.get(counterOfEdges).color.toString().toLowerCase());
                 }
 
-                if(showWeights == true) {
+                if(showWeights) {
                     result.append("%2Clabel%3D");
-                    result.append(String.valueOf(graph.getEdgeWeight(edges.get(counterOfEdges))));
+                    result.append(graph.getEdgeWeight(edges.get(counterOfEdges)));
                 }
 
 				result.append("%5D");
