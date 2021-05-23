@@ -24,7 +24,7 @@ public class GraphExporter {
         exporter.exportGraph(graph, writer);
         String output = writer.toString();
 
-        String websiteAddress = createUrlFromOutput(output, new ArrayList<>(graph.edgeSet()));
+        String websiteAddress = createUrlFromOutput(output, new ArrayList<>(graph.edgeSet()), graph);
         openInBrowser(websiteAddress);
 
     }
@@ -61,7 +61,7 @@ public class GraphExporter {
 
     // input must be of this form:
 	// strict graph G {  v3 -- v4;  v4 -- v8;  v2 -- v6;}
-	private static String createUrlFromOutput(String input, List<Edge> edges) {
+	private static String createUrlFromOutput(String input, List<Edge> edges, Graph<Vertex, Edge> graph) {
 		String defaultString = "https://dreampuf.github.io/GraphvizOnline/#strict%20graph%20G%7B";
 
 		String output = deleteVerticesFromOutput(input);
@@ -75,7 +75,15 @@ public class GraphExporter {
 
 			if (c == ';') {
 				result.append("%5Bcolor%3D");
-				result.append(edges.get(counterOfEdges).color.toString().toLowerCase());
+                if(edges.get(counterOfEdges).color == null) {
+                    result.append("black");
+                } else {
+                    result.append(edges.get(counterOfEdges).color.toString().toLowerCase());
+                }
+
+                result.append("%2Clabel%3D");
+                result.append(String.valueOf(graph.getEdgeWeight(edges.get(counterOfEdges))));
+
 				result.append("%5D");
 				result.append("%3B");
 				counterOfEdges++;
