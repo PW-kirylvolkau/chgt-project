@@ -1,4 +1,3 @@
-import java.util.Set;
 import org.jgrapht.Graph;
 import org.jgrapht.generate.GnpRandomBipartiteGraphGenerator;
 import org.jgrapht.generate.GnpRandomGraphGenerator;
