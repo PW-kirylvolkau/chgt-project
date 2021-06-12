@@ -15,7 +15,7 @@ public class GraphExporter {
     private static boolean showWeights;
 
     public static void export(Graph<Vertex, Edge> graph, boolean displayWeights) {
-        numberOfVertices =  graph.vertexSet().size();
+        numberOfVertices = graph.vertexSet().size();
         showWeights = displayWeights;
 
         DOTExporter<Vertex, Edge> exporter = new DOTExporter<>(v -> v.name);

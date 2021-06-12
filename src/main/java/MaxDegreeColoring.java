@@ -4,6 +4,7 @@ import org.jgrapht.graph.SimpleGraph;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.jgrapht.graph.SimpleWeightedGraph;
 
 public class MaxDegreeColoring implements Algorithm {
 
@@ -11,7 +12,7 @@ public class MaxDegreeColoring implements Algorithm {
     public Graph<Vertex, Edge> colorGraph(Graph<Vertex, Edge> graph) {
         int allowedNumberOfColors = findGraphDegree(graph);
         ArrayList<ColorEnum> palette = new ArrayList<>();
-        Graph<Vertex, Edge> newGraph = new SimpleGraph<>(Edge.class);
+        Graph<Vertex, Edge> newGraph = new SimpleWeightedGraph<>(Edge.class);
         graph.vertexSet().forEach(newGraph::addVertex);
         ColorEnum tempColor;
 
@@ -34,6 +35,8 @@ public class MaxDegreeColoring implements Algorithm {
                 if(color != null) {
                     edge.color = color;
                     newGraph.addEdge(edge.getVerticies(graph).get(0), edge.getVerticies(graph).get(1), edge);
+					Edge edge1 = newGraph.getEdge(graph.getEdgeSource(edge), graph.getEdgeTarget(edge));
+					newGraph.setEdgeWeight(edge1, graph.getEdgeWeight(edge1));
                     palette.add(color);
                     continue;
                 }
@@ -56,7 +59,6 @@ public class MaxDegreeColoring implements Algorithm {
                     }
 
                 }
-
 
                 edge.color = tempColor;
                 customEdges.colorEdge(v1, v2, tempColor);
