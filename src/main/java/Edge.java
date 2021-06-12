@@ -25,4 +25,8 @@ public class Edge extends DefaultEdge implements Serializable {
 	public String toString() {
 		return super.toString() + " " + color.name();
 	}
+
+	public ColorEnum getColor() {
+		return color;
+	}
 }
