@@ -19,6 +19,7 @@ public class CompleteGraphDemo {
 		TreesAlgorithm algo = new TreesAlgorithm();
 		graph = algo.colorGraph(graph);
 		GraphExporter.export(graph, true);
+		GraphStateReporter.reportState(graph);
 
 		// TreesAlgorithmBFS
 		graph = new SimpleGraph<>(VertexSupplier.createDefaultVertexSupplier(), EdgeSupplier.createDefaultEdgeSupplier(), true);
@@ -28,6 +29,7 @@ public class CompleteGraphDemo {
 		TreesAlgorithmBFS algo1 = new TreesAlgorithmBFS();
 		graph = algo1.colorGraph(graph);
 		GraphExporter.export(graph, true);
+		GraphStateReporter.reportState(graph);
 
 		// MaxDegreeColoring
 		graph = new SimpleGraph<>(VertexSupplier.createDefaultVertexSupplier(), EdgeSupplier.createDefaultEdgeSupplier(), true);
@@ -37,6 +39,7 @@ public class CompleteGraphDemo {
 		MaxDegreeColoring algo2 = new MaxDegreeColoring();
 		graph = algo2.colorGraph(graph);
 		GraphExporter.export(graph, true);
+		GraphStateReporter.reportState(graph);
 
 		// KesselmanKogan
 		graph = new SimpleGraph<>(VertexSupplier.createDefaultVertexSupplier(), EdgeSupplier.createDefaultEdgeSupplier(), true);
@@ -46,6 +49,7 @@ public class CompleteGraphDemo {
 		KesselmanKogan algo3 = new KesselmanKogan();
 		graph = algo3.colorGraph(graph);
 		GraphExporter.export(graph, true);
+		GraphStateReporter.reportState(graph);
 
 	}
 }
